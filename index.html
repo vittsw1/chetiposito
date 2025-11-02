@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test dei dodese tipi de Pearsonaità</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        /* * BACKGROUND IMMAGE RESPONSIVE
+         * Aggiunge un pseudo-elemento ::before al body che funge da sfondo.
+         * Usa 'sfondo.png' come default (desktop) e 'sfondomobile.png' 
+         * per schermi più piccoli (sotto 768px).
+         */
+        body::before {
+            content: '';
+            position: fixed; /* Rimane fisso durante lo scroll */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Mette lo sfondo dietro a tutto il contenuto */
+            
+            /* Immagine di sfondo per DESKTOP */
+            background-image: url('sfondo.png'); 
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        /* Media query per dispositivi mobili (max-width: 768px) */
+        @media (max-width: 768px) {
+            body::before {
+                /* Immagine di sfondo per MOBILE */
+                background-image: url('sfondomobile.png'); 
+                /* 'fixed' può dare problemi su mobile, 'scroll' è più sicuro */
+                background-attachment: scroll; 
+            }
+        }
+    
+        /* Stile personalizzato per migliorare l'aspetto */
+        body {
+            font-family: 'Inter', sans-serif;
+            /* Rimosso il background-color per far vedere l'immagine */
+        }
+        
+        .quiz-container {
+            max-width: 800px;
+            margin: 0 auto;
+            /* Il padding è ora gestito da classi Tailwind responsive (px-4 md:px-8) */
+        }
+        
+        .question-card {
+            /* Sfondo e ombra ora gestiti da classi Tailwind (bg-white/90) */
+            border-left: 5px solid #069e2c; /* Verde veneto */
+            transition: all 0.2s;
+        }
+        
+        /* Stile per i radio button selezionati */
+        .score-radio:checked + .score-label {
+            background-color: #069e2c;
+            color: white;
+            border-color: #069e2c;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            transform: scale(1.05);
+        }
+        
+        /* Etichette dei radio (i punteggi) */
+        .score-label {
+            transition: all 0.1s ease-in-out;
+            cursor: pointer;
+            text-align: center; /* Centra il testo */
+            /* Lo sfondo di base è ora gestito dalle classi 'scoreColors' 
+               (es. bg-red-100/80) per la trasparenza */
+        }
+        
+        /* Stile per il disclaimer */
+        .disclaimer {
+            font-size: 0.75rem; /* Testo piccolo (text-xs) */
+            color: #374151; /* Grigio scuro per contrasto */
+            margin-top: 1rem;
+            /* Sfondo semi-trasparente per leggibilità */
+            background-color: rgba(255, 255, 255, 0.85);
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            display: inline-block; /* Per far funzionare padding e bg */
+        }
+        
+        /* Stile per il risultato dominante */
+        .dominant-archetype {
+            border-color: #069e2c !important;
+            /* Questo rimane opaco per massima leggibilità */
+            background-color: #ecfdf5; 
+        }
+    </style>
+</head>
+<body>
+
+    <div class="quiz-container min-h-screen px-4 md:px-8">
+
+        <header class="text-center mb-10 pt-8 p-4 md:p-6 rounded-xl bg-white/90 backdrop-blur-sm shadow-lg">
+            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-green-700">🧙‍♀️ Test: ma che rassa de personajo sito?</h1>
+            <p class="mt-3 text-lg sm:text-xl text-gray-600">“Scoprilo ora: ara che so 'drio parlare co tì miga co' chealtro!”</p>
+            <p class="disclaimer">
+                Disclaimer: Sto test xe solo per rider e no gà nissuna validità scientifica. I dati no i vien salvà e te si in anonimato ma comunque un imbriagòn.
+            </p>
+        </header>
+        
+        <form id="quiz-form" class="space-y-6">
+            </form>
+
+        <div class="mt-10 text-center">
+            <button id="submit-button" onclick="calculateScore()" class="w-full md:w-auto py-3 px-6 text-lg md:py-4 md:px-10 md:text-xl bg-green-600 text-white font-bold rounded-xl shadow-lg hover:bg-green-700 transition duration-300 transform hover:scale-105">
+                Calcola el mio Archetipo
+            </button>
+        </div>
+
+        <div id="result-area" class="mt-12 p-4 md:p-8 bg-white/90 backdrop-blur-sm border-4 border-dashed border-green-300 rounded-2xl shadow-2xl hidden">
+            <h2 class="text-3xl font-bold text-center mb-4 text-green-700">🎉 El to Archetipo Dominante</h2>
+            <div id="dominant-archetype-results">
+                </div>
+            
+            <h3 class="text-xl font-bold text-center mt-8 mb-4 text-gray-700">📈 Tutti i to punteggi (1-5)</h3>
+            <div id="all-scores" class="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
+                </div>
+
+            <div class="mt-6 text-center">
+                 <button onclick="resetQuiz()" class="text-green-600 hover:text-green-800 font-semibold text-lg mt-4">
+                     Riprova el Test
+                 </button>
+            </div>
+        </div>
+
+        <div id="error-message" class="mt-6 p-4 bg-red-100/90 backdrop-blur-sm text-red-700 rounded-lg shadow hidden" role="alert">
+            Par piaser, rispondi a tute le 12 domande par calcolar el to risultato!
+        </div>
+
+    </div> <script>
+        // Definisce le etichette della scala di risposta
+        const scoreLabels = {
+            1: "1️⃣ Per niente", 
+            2: "2️⃣ Quasi mai", 
+            3: "3️⃣ Dipende", 
+            4: "4️⃣ Spesso", 
+            5: "5️⃣ Totalmente!" 
+        };
+        
+        // Colori resi semi-trasparenti (es. /80) per stare meglio sullo sfondo
+        const scoreColors = {
+            1: "bg-red-100/80",
+            2: "bg-orange-100/80",
+            3: "bg-yellow-100/80",
+            4: "bg-lime-100/80",
+            5: "bg-green-100/80"
+        };
+
+        // Struttura delle domande e delle risposte in veneto
+        const questions = [
+            // 1. Innocente
+            { id: 'innocente', title: "L’Innocente", icon: '☀️', text: "Ti xe uno che cerca sempre de veder el lato bon anca quado tuto va in mona?", responses: ["Ma no, me vien su el nervo subito!", "Dipende dal giorno.", "Me sforzo de pensar positivo.", "Sì, ghe trovo sempre el lato bon.", "Sempre allegro come un sol! ☀️"] },
+            // 2. Esploratore
+            { id: 'esploratore', title: "Il degustatore", icon: '🧭', text: "Te piase provar robe nove, viaggiar, o cambiar sempre aria?", responses: ["No, casa mia e basta.", "Ogni tanto, ma senza stress.", "Se me capita, sì.", "Sempre pronto a partir!", "Me sento morto se no scopro qualcosa de novo!"] },
+            // 3. Saggio
+            { id: 'saggio', title: "El Sajio, come el formajo", icon: '🦉', text: "Ti xe uno che ragiona prima de far, e cerca sempre de capir el perché delle robe?", responses: ["Me fido del caso.", "Boh, a volte sì.", "Me piace ragionar, sì.", "Me godo capir come funziona el mondo.", "Mi so sempre tuto prima degli altri! 😎"] },
+            // 4. Eroe
+            { id: 'eroe', title: "Co ti gà bisogno, so qua", icon: '🦸‍♂️', text: "Quando ghe xe un problema, te te buti dentro a risolverlo anca se no te tocca?", responses: ["No, ognuno i so problemi.", "Solo se proprio serve.", "Me vien spontaneo dar na man.", "Me sento in dovere.", "Me godo salvar la baracca!"] },
+            // 5. Ribelle
+            { id: 'ribelle', title: "El cavaròn", icon: '⚡', text: "Te gà mai la tentazion de far el contrario solo per principio?", responses: ["Mai, no me va de rogne.", "A volte me frulla l’idea.", "Ogni tanto ghe do na scossa.", "Mi vivo de rivoluzion!", "Me vien l’orticaria se devo far come tutti!"] },
+            // 6. Mago
+            { id: 'mago', title: "El tramaciòn", icon: '🔮', text: "Te se uno che pensa che tutto se possa transformar se te ci credi abbastanza?", responses: ["Ma va là, sogni e basta.", "Sì, ma serve culo.", "Un poco sì, me piace provar.", "Me vien da trasformar tutto in oro (o quasi).", "Son un alchimista nato! ✨"] },
+            // 7. Uomo/donna comune
+            { id: 'comune', title: "Coi fiòi", icon: '👨‍🌾', text: "Te gà bisogno de sentirte parte del grupo, senza troppe scene?", responses: ["No, me piase star da solo.", "Dipende dal grupo.", "Sì, me fa star ben esser tra la zente.", "Me piace che tuti se senta uguali.", "Mi son proprio uno del popolo, alla buona!"] },
+            // 8. Amante
+            { id: 'amante', title: "Fureghìn", icon: '❤️', text: "Te vivi co’ tanta emozion e te gòdi ogni sensassion forte?", responses: ["Me basta star tranquillo.", "Ogni tanto, sì.", "Me piase sentirme vivo.", "Me buto col cuore in tutto.", "Me sento perso se no ghe xe passione! 💋"] },
+            // 9. Burlone
+            { id: 'burlone', title: "El Pajasso", icon: '🤡', text: "Te gà sempre na battuta pronta, anca nei momenti storti?", responses: ["No, me vien da pianzer prima.", "A volte, per sdramatizzar.", "Me piace far rider la zente.", "Sempre in vena de far casino.", "Mi no vivo se no ghe xe da rider! 😂"] },
+            // 10. Caregiver
+            { id: 'caregiver', title: "El bravo omo", icon: '🤱', text: "Te metti spesso i bisogni degli altri prima dei to?", responses: ["Eh no, mi vengo prima!", "Solo se ghe tengo.", "Se posso aiutar, volentieri.", "Sempre pronto a dar na man.", "Mi no dormo se qualcun ghe sta mal."] },
+            // 11. Creatore
+            { id: 'creatore', title: "El mastro vetraio", icon: '🎨', text: "Te gà sempre mille idee in testa, robe da far, disegnar, crear?", responses: ["Me basta quel che ghe xe.", "Ogni tanto m’invento qualcosa.", "Me vien spesso de crear.", "Sempre con la testa fra progetti.", "Mi son un vulcan de idee! 💡"] },
+            // 12. Sovrano
+            { id: 'sovrano', title: "So mi el paròn", icon: '👑', text: "Te gà bisogno de aver el control e far andar le robe come te dise ti?", responses: ["No, me va ben seguir.", "Ogni tanto ghe provo.", "Me piace tener le cose in ordine.", "Preferisso guidar che seguir.", "Mi naso come un capo naturale. 👑"] },
+        ];
+
+        // Mappa dei 12 Archetipi (usata per i risultati)
+        const archetypes = [
+            { id: 'innocente', title: "El sempliciotto ☀️", score_range: '4-5 Punti', description: "Te sognassi ancora co' i oci verti. Voemo che tuto sia fasile, alegre e sensa casin. Tuto de quel che te fai xe fato col cuor pulito. La to mission: trovar la felicità in ogni spriss. Te sta attento a no diventar 'el mona de turno'." },
+            { id: 'esploratore', title: "El Singano 🧭", score_range: '4-5 Punti', description: "Te ghe na gran voja de 'ndare a ombre. La libertà xe tuto, e te scampi daea noia come dalla peste. Te ami viagiar, provar robe estreme, e far la vita 'de micheasso'. La to sfida: fermarte ogni tanto a godarte el panorama de casa." },
+            { id: 'saggio', title: "El professore (Sajio) 🦉", score_range: '4-5 Punti', description: "Prima de dir o far qualcosa, te pensi diese volte. Te ami studiar, capir el perché de ogni cosa e te ghe la testa piena de roba che nessuni sà. Ti xe el 'sapientone' del grupo. La to sfida: parlar manco de chi ze più imbriago de ti." },
+            { id: 'eroe', title: "El sistema casini 🦸‍♂️", score_range: '4-5 Punti', description: "Te vedi el mondo come un campo de battaglia e te vołi vincer. Te se coraggioso, te agissi subito e no te aspeti che qualcun altro fazza el laoro. La to missione xe sistemar le ingiustizie. La to sfida: capir che no te pol salvar tuto el mondo da solo." },
+            { id: 'ribelle', title: "Testa mata⚡", score_range: '4-5 Punti', description: "Te odi le regole e chi te dise 'fà così'. Te vołi butar zo i muri vecchi par far posto al novo, anca a costo de far casin. Te si un ribelle per natura. La to sfida: no far casin solo per el gusto de farlo, ma con un scopo serio." },
+            { id: 'mago', title: "Sgajo 🔮", score_range: '4-5 Punti', description: "Te credi che tutto se possa cambiar, te ghe na vision 'magica' del futuro. Te porti innovazion e te trovi soluzion che parano impossibili. Te se un alchimista. La to sfida: no perdarte via in sogni troppo grandi, e far un passo alla volta." },
+            { id: 'comune', title: "L'Amico/a de Bepi 👨‍🌾", score_range: '4-5 Punti', description: "Te si un imbriagòn, uno come tuti, senza tante storie. La to forza xe l'onestà, l'umiltà e 'l sentirte parte de na comunità. Te serchi l'appartenenza e la parità. La to sfida: permetterte de brillar e de no nasconderte tra la zente." },
+            { id: 'amante', title: "Infervorìo ❤️", score_range: '4-5 Punti', description: "Te vivi de amor, bellezza e sensassion forti. Te cerchi la connession profonda, sia in amore che nelle amicizie. Te ghe un occhio per el gusto e per le robe bele. La to sfida: no diventar geloso e no 'tacarte' troppo ai altri." },
+            { id: 'burlone', title: "El Sganasso 🤡", score_range: '4-5 Punti', description: "Se no ghe xe da rider, te te spegni. Te si el re delle battute, anca quando el momento xe serio (forsi massa). Te aiuti a sdramatizzar. La to sfida: capir quando 'l scherzo xe troppo e te ris-ci de ofender qualcun." },
+            { id: 'caregiver', title: "El zio queo bòn 🤱", score_range: '4-5 Punti', description: "Te si na persona che cura e protegge. I bisogni dei altri vien prima dei toi, anca se no te ghe lo chiede. Te ghe un gran senso de responsabilità. La to sfida: pensar anca a ti stesso, e no farte 'strasinar' dalle rogne dei altri." },
+            { id: 'creatore', title: "El Mato co’ e man de oro 🎨", score_range: '4-5 Punti', description: "Te gà sempre na idea nuova, te vołi far qualcosa de unico e originale. Te si artistico, innovativo e te detesti el standard. Te ghe bisogno de tempo par 'far star ben' le to robe. La to sfida: finir quel che te scominci, e no perdarte dietro a dieze idee al giorno." },
+            { id: 'sovrano', title: "El Paron 👑", score_range: '4-5 Punti', description: "Te si un leader nato, te vołi l'ordine e el control. Te ami gestir e far andar le robe come te dise ti, perchè ti te sa che xe el modo giusto. Te cerchi el successo e la stabilità. La to sfida: no esser troppo 'paron' e lassar libertà ai to amici." }
+        ];
+
+        // Funzione per inizializzare il quiz e disegnare le domande
+        function initQuiz() {
+            const form = document.getElementById('quiz-form');
+            form.innerHTML = ''; // Pulisce il form
+
+            questions.forEach((q, index) => {
+                const qNum = index + 1;
+                
+                // HTML per la singola domanda
+                // AGGIUNTO: classi bg-white/90 backdrop-blur-sm per effetto "glass"
+                const questionHtml = `
+                    <div class="question-card p-5 rounded-xl shadow-md bg-white/90 backdrop-blur-sm">
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">${qNum}. ${q.title} ${q.icon}</h3>
+                        <p class="text-lg font-medium text-gray-700 mb-4">${q.text}</p>
+                        
+                        <div class="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                            ${[1, 2, 3, 4, 5].map(score => {
+                                const labelText = q.responses[score - 1]; // Usa la risposta specifica
+                                const scoreDescription = scoreLabels[score]; // Usa la descrizione standard
+                                // Usa i colori semi-trasparenti definiti in scoreColors
+                                const colorClass = scoreColors[score]; 
+                                return `
+                                    <input type="radio" id="q${qNum}-score${score}" name="${q.id}" value="${score}" class="score-radio hidden" required>
+                                    <label for="q${qNum}-score${score}" class="score-label flex flex-col justify-center min-h-[80px] p-2 border-2 border-gray-300 rounded-lg text-xs font-medium text-gray-800 hover:border-green-500 hover:text-green-600 ${colorClass}">
+                                        <span class="font-bold text-sm">${scoreDescription}</span>
+                                        <span class="mt-1">${labelText}</span>
+                                    </label>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+                `;
+                form.innerHTML += questionHtml;
+            });
+        }
+
+        // Funzione per calcolare il punteggio
+        function calculateScore() {
+            let answeredCount = 0;
+            const archetypeScores = {};
+            const errorElement = document.getElementById('error-message');
+            errorElement.classList.add('hidden'); 
+
+            questions.forEach(q => {
+                const selected = document.querySelector(`input[name="${q.id}"]:checked`);
+                
+                if (selected) {
+                    archetypeScores[q.id] = parseInt(selected.value);
+                    answeredCount++;
+                }
+            });
+
+            // Se manca una risposta
+            if (answeredCount !== questions.length) {
+                errorElement.classList.remove('hidden');
+                document.getElementById('result-area').classList.add('hidden');
+                return;
+            }
+
+            displayResult(archetypeScores);
+        }
+
+        // Funzione per visualizzare i risultati
+        function displayResult(archetypeScores) {
+            const resultArea = document.getElementById('result-area');
+            const dominantResultsDiv = document.getElementById('dominant-archetype-results');
+            const allScoresDiv = document.getElementById('all-scores');
+            
+            // 1. Trova il punteggio massimo
+            const scores = Object.values(archetypeScores);
+            const maxScore = Math.max(...scores);
+
+            // 2. Trova tutti gli archetipi con il punteggio massimo (gestione pareggi)
+            const dominantArchetypes = archetypes.filter(a => archetypeScores[a.id] === maxScore);
+
+            // 3. Genera l'HTML per i risultati dominanti
+            let dominantHtml = '';
+            if (dominantArchetypes.length > 1) {
+                dominantHtml += `<p class="text-xl text-center mb-6 text-gray-700">Pareggio! Te si un misto de 'sti Archetipi (Punteggio: <span class="text-3xl font-extrabold text-green-600">${maxScore}</span>):</p>`;
+            } else {
+                 dominantHtml += `<p class="text-xl text-center mb-6 text-gray-700">El to punteggio dominante xe: <span class="text-3xl font-extrabold text-green-600">${maxScore}</span></p>`;
+            }
+
+            dominantArchetypes.forEach(result => {
+                dominantHtml += `
+                    <div class="p-6 mt-4 rounded-xl shadow-lg border-2 border-green-500 dominant-archetype">
+                        <h3 class="text-3xl font-extrabold text-center mb-4 text-gray-900">${result.title}</h3>
+                        <p class="text-lg text-gray-700 leading-relaxed">${result.description}</p>
+                    </div>
+                `;
+            });
+            dominantResultsDiv.innerHTML = dominantHtml;
+
+
+            // 4. Genera l'HTML per tutti i punteggi
+            let allScoresHtml = '';
+            // Ordina gli archetipi per punteggio (decrescente) prima di mostrarli
+            archetypes.sort((a, b) => archetypeScores[b.id] - archetypeScores[a.id])
+                      .forEach(a => {
+                const score = archetypeScores[a.id];
+                const isDominant = score === maxScore;
+                allScoresHtml += `
+                    <div class="p-3 rounded-lg border text-center ${isDominant ? 'bg-green-100 border-green-500 font-bold' : 'bg-gray-50 border-gray-200'}">
+                        <span class="text-xs text-gray-500">${a.title.split('(')[0].trim()}</span>
+                        <p class="text-lg ${isDominant ? 'text-green-700' : 'text-gray-900'}">${score} Punti</p>
+                    </div>
+                `;
+            });
+            allScoresDiv.innerHTML = allScoresHtml;
+
+            // Mostra l'area dei risultati
+            resultArea.classList.remove('hidden');
+            // Scorri fino all'area dei risultati
+            resultArea.scrollIntoView({ behavior: 'smooth' });
+        }
+
+
+        // Funzione per resettare il quiz
+        function resetQuiz() {
+            document.getElementById('quiz-form').reset();
+            document.getElementById('result-area').classList.add('hidden');
+            document.getElementById('error-message').classList.add('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Inizializza il quiz all'avvio della pagina
+        window.onload = initQuiz;
+    </script>
+
+</body>
+</html>
