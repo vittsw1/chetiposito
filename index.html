@@ -143,11 +143,11 @@
     </div> <script>
         // Definisce le etichette della scala di risposta
         const scoreLabels = {
-            1: "1️⃣ Per niente", 
-            2: "2️⃣ Quasi mai", 
-            3: "3️⃣ Dipende", 
-            4: "4️⃣ Spesso", 
-            5: "5️⃣ Totalmente!" 
+            1: "Par niente", 
+            2: "Quasi mai", 
+            3: "Dipende", 
+            4: "Spesso", 
+            5: "Ma cierto!" 
         };
         
         // Colori resi semi-trasparenti (es. /80) per stare meglio sullo sfondo
@@ -172,9 +172,9 @@
             // 5. Ribelle
             { id: 'ribelle', title: "El cavaròn", icon: '⚡', text: "Te gà mai la tentazion de far el contrario solo per principio?", responses: ["Mai, no me va de rogne.", "A volte me frulla l’idea.", "Ogni tanto ghe do na scossa.", "Mi vivo de rivoluzion!", "Me vien l’orticaria se devo far come tutti!"] },
             // 6. Mago
-            { id: 'mago', title: "El tramaciòn", icon: '🔮', text: "Te se uno che pensa che tutto se possa transformar se te ci credi abbastanza?", responses: ["Ma va là, sogni e basta.", "Sì, ma serve culo.", "Un poco sì, me piace provar.", "Me vien da trasformar tutto in oro (o quasi).", "Son un alchimista nato! ✨"] },
+            { id: 'mago', title: "El tramaciòn", icon: '🔮', text: "Ti xe uno che pensa che tutto se possa transformar se te ghe credi abbastanza?", responses: ["Ma va là, sogni e basta.", "Sì, ma serve culo.", "Un poco sì, me piace provar.", "Me vien da trasformar tutto in oro (o quasi).", "Son un alchimista nato! ✨"] },
             // 7. Uomo/donna comune
-            { id: 'comune', title: "Coi fiòi", icon: '👨‍🌾', text: "Te gà bisogno de sentirte parte del grupo, senza troppe scene?", responses: ["No, me piase star da solo.", "Dipende dal grupo.", "Sì, me fa star ben esser tra la zente.", "Me piace che tuti se senta uguali.", "Mi son proprio uno del popolo, alla buona!"] },
+            { id: 'comune', title: "Coi fiòi", icon: '👨‍🌾', text: "Te gà bisogno de sentirte parte del grupo, senza troppe scene?", responses: ["No, me piase star da solo.", "Dipende dal grupo.", "Sì, me fa star ben esser tra la zente.", "Me piace che tuti se sentà uguai.", "Mi son proprio uno del popolo, alla buona!"] },
             // 8. Amante
             { id: 'amante', title: "Fureghìn", icon: '❤️', text: "Te vivi co’ tanta emozion e te gòdi ogni sensassion forte?", responses: ["Me basta star tranquillo.", "Ogni tanto, sì.", "Me piase sentirme vivo.", "Me buto col cuore in tutto.", "Me sento perso se no ghe xe passione! 💋"] },
             // 9. Burlone
@@ -192,9 +192,9 @@
             { id: 'innocente', title: "El sempliciotto ☀️", score_range: '4-5 Punti', description: "Te sognassi ancora co' i oci verti. Voemo che tuto sia fasile, alegre e sensa casin. Tuto de quel che te fai xe fato col cuor pulito. La to mission: trovar la felicità in ogni spriss. Te sta attento a no diventar 'el mona de turno'." },
             { id: 'esploratore', title: "El Singano 🧭", score_range: '4-5 Punti', description: "Te ghe na gran voja de 'ndare a ombre. La libertà xe tuto, e te scampi daea noia come dalla peste. Te ami viagiar, provar robe estreme, e far la vita 'de micheasso'. La to sfida: fermarte ogni tanto a godarte el panorama de casa." },
             { id: 'saggio', title: "El professore (Sajio) 🦉", score_range: '4-5 Punti', description: "Prima de dir o far qualcosa, te pensi diese volte. Te ami studiar, capir el perché de ogni cosa e te ghe la testa piena de roba che nessuni sà. Ti xe el 'sapientone' del grupo. La to sfida: parlar manco de chi ze più imbriago de ti." },
-            { id: 'eroe', title: "El sistema casini 🦸‍♂️", score_range: '4-5 Punti', description: "Te vedi el mondo come un campo de battaglia e te vołi vincer. Te se coraggioso, te agissi subito e no te aspeti che qualcun altro fazza el laoro. La to missione xe sistemar le ingiustizie. La to sfida: capir che no te pol salvar tuto el mondo da solo." },
+            { id: 'eroe', title: "El sistema casini 🦸‍♂️", score_range: '4-5 Punti', description: "Te vedi el mondo come un campo de battaglia e te vołi vincer. Ti xe coraggioso, te agissi subito e no te aspeti che qualcun altro fazza el laoro. La to missione xe sistemar le ingiustizie. La to sfida: capir che no te pol salvar tuto el mondo da solo." },
             { id: 'ribelle', title: "Testa mata⚡", score_range: '4-5 Punti', description: "Te odi le regole e chi te dise 'fà così'. Te vołi butar zo i muri vecchi par far posto al novo, anca a costo de far casin. Te si un ribelle per natura. La to sfida: no far casin solo per el gusto de farlo, ma con un scopo serio." },
-            { id: 'mago', title: "Sgajo 🔮", score_range: '4-5 Punti', description: "Te credi che tutto se possa cambiar, te ghe na vision 'magica' del futuro. Te porti innovazion e te trovi soluzion che parano impossibili. Te se un alchimista. La to sfida: no perdarte via in sogni troppo grandi, e far un passo alla volta." },
+            { id: 'mago', title: "Sgajo 🔮", score_range: '4-5 Punti', description: "Te credi che tutto se possa cambiar, te ghe na vision 'magica' del futuro. Te porti innovazion e te trovi soluzion che parano impossibili. Ti xe un alchimista. La to sfida: no perdarte via in sogni troppo grandi, e far un passo alla volta." },
             { id: 'comune', title: "L'Amico/a de Bepi 👨‍🌾", score_range: '4-5 Punti', description: "Te si un imbriagòn, uno come tuti, senza tante storie. La to forza xe l'onestà, l'umiltà e 'l sentirte parte de na comunità. Te serchi l'appartenenza e la parità. La to sfida: permetterte de brillar e de no nasconderte tra la zente." },
             { id: 'amante', title: "Infervorìo ❤️", score_range: '4-5 Punti', description: "Te vivi de amor, bellezza e sensassion forti. Te cerchi la connession profonda, sia in amore che nelle amicizie. Te ghe un occhio per el gusto e per le robe bele. La to sfida: no diventar geloso e no 'tacarte' troppo ai altri." },
             { id: 'burlone', title: "El Sganasso 🤡", score_range: '4-5 Punti', description: "Se no ghe xe da rider, te te spegni. Te si el re delle battute, anca quando el momento xe serio (forsi massa). Te aiuti a sdramatizzar. La to sfida: capir quando 'l scherzo xe troppo e te ris-ci de ofender qualcun." },
